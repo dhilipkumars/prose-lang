@@ -1,0 +1,38 @@
+schema_version: "1.0"
+
+extension:
+  id: "prose-lang"
+  name: "Prose-Lang Compiler Toolchain"
+  version: "0.0.1-alpha"
+  description: "A declarative language for describing apps in natural prose that AI agents compile to code."
+  author: "Dhilip Kumar S"
+  repository: "https://github.com/dhilipkumars/prose-lang"
+  license: "MIT"
+  homepage: "https://github.com/dhilipkumars/prose-lang"
+
+requires:
+  speckit_version: ">=0.1.0"
+
+provides:
+  commands:
+    - name: "speckit.prose-lang.generate"
+      file: "commands/prose.generate.md"
+      description: "Compile a .prose file into source code"
+    - name: "speckit.prose-lang.build"
+      file: "commands/prose.build.md"
+      description: "Build generated code into deployable artifacts"
+    - name: "speckit.prose-lang.test"
+      file: "commands/prose.test.md"
+      description: "Run tests to validate implementation against the .prose spec"
+    - name: "speckit.prose-lang.document"
+      file: "commands/prose.document.md"
+      description: "Generate documentation from a .prose file"
+    - name: "speckit.prose-lang.publish"
+      file: "commands/prose.publish.md"
+      description: "Version, tag, and release the project"
+
+tags:
+  - "code-generation"
+  - "specification"
+  - "compiler"
+  - "natural-language"

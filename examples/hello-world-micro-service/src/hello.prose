@@ -1,0 +1,32 @@
+# App: Hello Microservice
+
+## 1. Context
+Type: Backend API
+Stack: Generate the same output for following langagues: golang and typescript
+Port: 8080
+
+## 2. Memory (Data Structures)
+- **Request Data**:
+  - `Input First Name`: Text (received from URL parameter "First name").
+  - `Input Last Name`: Text (received from URL parameter "Last name").
+- **Response Data**:
+  - `Message Payload`: JSON Object `{ "message": string }`.
+
+## 3. Algorithms (Logic)
+
+**Algorithm: Say Hello**
+1. **EXTRACT** `Input Frist and Last Name` from the request URL query parameters.
+2. **VALIDATE** `Input Frist & Last Names`:
+   a. **IF** either of the Name is empty or missing:
+      i. **SET** `Input Name` to "World" (Default).
+3. **CONSTRUCT** the response:
+   a. **FORMAT** the string: "Vanakam" + `Last Name, First Name`.
+   b. **STORE** it in `Message Payload`.
+4. **SEND** Response:
+   a. **SET** HTTP Status Code to 200 (OK).
+   b. **SET** Content-Type header to "application/json".
+   c. **WRITE** `Message Payload` as JSON to the response body.
+
+## 4. Interface (API Routes)
+- **Route:** `GET /hello`
+  - **Trigger:** Executes **Algorithm: Say Hello**.

@@ -1,0 +1,47 @@
+# App: Book Library
+
+## 1. Context
+Type: full-stack app
+Stack: 
+  - Backend: rust
+  - UI: react-js (inspire from liquid glass style)
+  - DB: postgres (as docker container)  
+
+## 2. Memory (Data Structures)
+  * Table to store book inventory (book_id, name, author, number of copies, publication year, edition)
+  * library members (member_id, name, address, age, email-id)
+  * book_borrow_ledger (book_id, member_id, borrow_date, expected_return, actual_return, return_condition)
+
+## 3. Algorithms (Logic)
+
+**Algorithm: Member flow**
+  1) register-flow:
+  - registers with frist name, last name, agei, email and address 
+  - returns a member id that got generated for the user
+  2) login flow:
+  - logs in with username and member id (no password)
+  - active_userID = current user.
+  3) chekcout flow:
+  - Select a book from the library (Validation make sure there is spare copies of the book available to borrow) 
+  - Add it to cart button
+  - checkout cart in the cart page.  Cart shows the list of books checked out 
+  - update book_borrow_ledger upon checkout
+  4) Borrowed book view
+  - Show list of book borrowed their return date, and mark them in red if they are overdue 
+  5) return flow: 
+  - enter book_id
+  6) logout
+  - clicks logs out
+  
+**Algorithm: Book Mangement**
+  1) Librarian flow
+  - librarian-logs in (admin/password) 
+  - Add book flow (name, title, auther, year of publication, edition)
+  - remove book flow 
+
+## 4. Interface (API Routes)
+  - **Build nessary api interfaces to satisfy UI and backend**
+
+## 5. Tests
+   - Backed:
+     * Test each api and validate if expected data was updated in the dataase tales. 

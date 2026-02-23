@@ -1,0 +1,26 @@
+# App: Container Management System (shipping industry)
+
+## 1. Context
+Type: java, postgres
+
+## 2. Memory (Data Structures)
+container_table (container_id, container_name, product_id, Quantity, units)
+
+## 3. Algorithms (Logic)
+* Implement CURD for container_table 
+- Get container by container_id {Full json}
+- Get container by product_id {Full json}
+* Rest API for List of all containers (with pagination), filter based on container_id or container_name
+
+## 4. Interface (API Routes)
+expose rest api for all the above
+
+## 5. Tests
+- Unit test for all the above api
+- Test all the above api using a curl and shell script
+
+## 6. Docker
+- Dockerfile for the above application
+- docker-compose.yml for the above application with its own postgres db
+
+
