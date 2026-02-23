@@ -1,0 +1,26 @@
+# App: Product Management System
+## 1. Context
+Type: java, postgres
+
+
+## 2. Memory (Data Structures)
+product_table (product_id, product_name, product_description, product_price, product_quantity)
+
+## 3. Algorithms (Logic)
+* Implement CURD for product_table 
+- Get product by product_id {Full json}
+* Rest API for List of all products (with pagination), filter based on product_id or product_name
+
+
+## 4. Interface (API Routes)
+- expose rest api for all the above
+
+## 5. Tests
+- Unit test for all the above api
+- Test all the above api using a curl and shell script
+
+## 6. Docker
+- Dockerfile for the above application
+- docker-compose.yml for the above application with its own postgres db
+
+

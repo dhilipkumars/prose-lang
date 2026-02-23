@@ -1,0 +1,40 @@
+# App: UI that shows Product Management and Container Management
+
+
+## 1. Context
+Type: React
+
+
+## 2. Memory (Data Structures)
+should be able call m1 and m2 apis
+
+## 3. Algorithms (Logic)
+User flow: Container Management
+- List of all containers (with pagination), filter based on container_id or container_name
+- Add container
+- Update container
+- Delete container
+
+User flow: Product Management
+- List of all products (with pagination), filter based on product_id or product_name
+- Add product
+- Update product
+- Delete product
+
+User flow: Dashboard
+- Title Gofills Dashboard
+- List of all containers with product name and product price (with pagination), filter based on container_id or container_name with product price   
+- Limit the pagination to defaulted to 5 items per page user can input the value to change the pagination
+
+
+## 4. Interface (API Routes)
+- Container Management
+- Product Management
+
+## 6. Docker
+- Dockerfile for m1 and dockerfile for its own postgres db
+- Dockerfile for m2 and dockerfile for its own postgres db  
+- Dockerfile for ui and dockerfile
+- docker-compose.yml for all the above service with volumes
+
+

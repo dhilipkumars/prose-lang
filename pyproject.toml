@@ -1,0 +1,25 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "prose-install"
+version = "0.0.1-alpha"
+description = "Installer for the Prose-Lang specification and AI agent skills"
+requires-python = ">=3.8"
+readme = "installer/README.md"
+license = { text = "MIT" }
+
+[project.scripts]
+prose-install = "installer.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["installer"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"spec/specification.md" = "installer/_data/specification.md"
+"spec/skills-template" = "installer/_data/skills-template"
+"spec/scripts" = "installer/_data/scripts"
+
+[tool.hatch.build.targets.sdist]
+include = ["installer/", "spec/specification.md", "spec/skills-template/", "spec/scripts/"]

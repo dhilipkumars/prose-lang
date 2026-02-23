@@ -1,0 +1,68 @@
+# Simple Calculator
+
+## 1. Context
+Type: React UI Application
+Description: A simple calculator for basic arithmetic operations.
+Target System: Web Browser
+
+## 2. Memory (The Workspace)
+- **DisplayValue**: The current string shown on the calculator display (Default: "0").
+- **PreviousValue**: The previous number stored for an operation.
+- **Operator**: The current arithmetic operator (+, -, *, /).
+- **WaitingForOperand**: Boolean flag to indicate if the next digit starts a new number.
+
+## 3. Skills (Behaviors)
+
+### Skill: `calc.inputDigit`
+**Description**: Handles digit button clicks.
+- **Inputs**: `digit` (string).
+- **Procedure**:
+  1. **IF** `WaitingForOperand` is TRUE:
+     a. **SET** `DisplayValue` to `digit`.
+     b. **SET** `WaitingForOperand` to FALSE.
+  2. **ELSE**:
+     a. **IF** `DisplayValue` is "0": **SET** `DisplayValue` to `digit`.
+     b. **ELSE**: **APPEND** `digit` to `DisplayValue`.
+
+### Skill: `calc.inputDot`
+**Description**: Adds a decimal point to the display.
+- **Procedure**:
+  1. **IF** `WaitingForOperand` is TRUE:
+     a. **SET** `DisplayValue` to "0.".
+     b. **SET** `WaitingForOperand` to FALSE.
+  2. **ELSE IF** `DisplayValue` does not contain ".":
+     a. **APPEND** "." to `DisplayValue`.
+
+### Skill: `calc.clear`
+**Description**: Resets the calculator state.
+- **Procedure**:
+  1. **SET** `DisplayValue` to "0".
+  2. **SET** `PreviousValue` to NULL.
+  3. **SET** `Operator` to NULL.
+  4. **SET** `WaitingForOperand` to FALSE.
+
+### Skill: `calc.performOperation`
+**Description**: Handles operator button clicks and executes pending operations.
+- **Inputs**: `nextOperator` (string).
+- **Procedure**:
+  1. **CONVERT** `DisplayValue` to `inputValue` (number).
+  2. **IF** `PreviousValue` is NULL:
+     a. **SET** `PreviousValue` to `inputValue`.
+  3. **ELSE IF** `Operator` is NOT NULL:
+     a. **CALCULATE** `result` using `PreviousValue`, `Operator`, and `inputValue`.
+     b. **SET** `DisplayValue` to string representation of `result`.
+     c. **SET** `PreviousValue` to `result`.
+  4. **SET** `WaitingForOperand` to TRUE.
+  5. **SET** `Operator` to `nextOperator`.
+
+## 4. Interface (UI Components)
+- **Display**: Shows `DisplayValue`.
+- **Color Theme: Light Grey and Black
+- **Keypad**:
+  - Digits (0-9): Triggers `calc.inputDigit`. 
+    - The Digit should be in devnagiri script
+  - Dot (.): Triggers `calc.inputDot`.
+  - Clear (AC): Triggers `calc.clear`.
+  - Operators (+, -, *, /): Triggers `calc.performOperation`.
+  - Equals (=): Triggers `calc.performOperation` with NULL next operator.
+

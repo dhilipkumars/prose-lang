@@ -1,0 +1,12 @@
+# Context
+Type: Command Line app (CLI)
+Stack: go
+
+# Memory
+NONE
+
+# Behaviors
+1. Say 'Namaste World, < UTC TimeStamp >'
+
+# Interface
+NONE

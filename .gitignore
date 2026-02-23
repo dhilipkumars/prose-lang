@@ -1,0 +1,59 @@
+# Built application files
+*.apk
+*.ap_
+*.aab
+*.dex
+*.class
+*.lo
+*.la
+*.o
+*.obj
+*.exe
+*.dll
+*.so
+*.dylib
+*.pyc
+
+# Go
+bin/
+pkg/
+*.test
+
+# Rust
+target/
+
+# Node
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Java
+target/
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# macOS
+.DS_Store
+
+# JetBrains IDEs
+.idea/
+*.iml
+
+# VSCode
+.vscode/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# prose-lang specific generated files
+**/generated/
+**/generated_gemini/
+**/*.prose.md5
+**/.prose-lang/
+**/.opencode/
