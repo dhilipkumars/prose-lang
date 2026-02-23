@@ -4,7 +4,6 @@
 ## 1. Context
 Type: React
 
-
 ## 2. Memory (Data Structures)
 should be able call m1 and m2 apis
 
@@ -22,7 +21,7 @@ User flow: Product Management
 - Delete product
 
 User flow: Dashboard
-- Title Gofills Dashboard
+- Title Shipyard Dashboard
 - List of all containers with product name and product price (with pagination), filter based on container_id or container_name with product price   
 - Limit the pagination to defaulted to 5 items per page user can input the value to change the pagination
 
