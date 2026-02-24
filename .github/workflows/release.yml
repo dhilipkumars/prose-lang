@@ -5,6 +5,11 @@ on:
     tags:
       - "v*.*.*"
   workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Tag name for the release (e.g., v0.0.1-alpha)'
+        required: true
+        type: string
 
 jobs:
   release:
@@ -30,6 +35,7 @@ jobs:
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v2
       with:
+        tag_name: ${{ github.event.inputs.tag_name || github.ref_name }}
         files: |
           dist/*.whl
           dist/*.tar.gz
