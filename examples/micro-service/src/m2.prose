@@ -4,7 +4,7 @@ Type: java, postgres
 
 
 ## 2. Memory (Data Structures)
-product_table (product_id, product_name, product_description, product_price, product_quantity)
+product_table (product_id, product_name, product_description, product_amount, product_quantity)
 
 ## 3. Algorithms (Logic)
 * Implement CURD for product_table 

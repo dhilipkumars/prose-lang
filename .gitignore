@@ -52,8 +52,6 @@ target/
 .env.*.local
 
 # prose-lang specific generated files
-**/generated/
-**/generated_gemini/
 **/*.prose.md5
 **/.prose-lang/
 **/.opencode/
