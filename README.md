@@ -2,7 +2,7 @@
 
 A declarative language for describing applications in natural prose that AI agents compile to source code.
 
-https://github.com/dhilipkumars/prose-lang/raw/main/hello-world-demo.mov
+https://github.com/dhilipkumars/prose-lang/raw/main/hello-world-demo.gif
 
 Write a `.prose` file → invoke the compiler → the AI agent generates the target code.
 

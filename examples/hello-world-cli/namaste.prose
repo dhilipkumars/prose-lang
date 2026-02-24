@@ -6,7 +6,13 @@ Stack: go
 NONE
 
 # Behaviors
-1. Say 'Namaste World, < UTC TimeStamp >'
+Get N from command line argument
+Loop I=0 to N
+  IF I is ODD
+     Say 'Namaste World!, < UTC TimeStamp >'
+  REPEATE N
+END
+
 
 # Interface
 NONE
