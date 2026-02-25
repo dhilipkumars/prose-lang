@@ -7,6 +7,18 @@ A complete three-tier full-stack application representing a Book Library. It fea
 
 ![Book Library Logged In](screenshot.png)
 
+## Architecture
+
+```mermaid
+graph TD
+    Client["Frontend (React UI)"]
+    API["Backend API (Rust Actix-Web)"]
+    DB[("Database (PostgreSQL)")]
+
+    Client -->|HTTP REST (Port 8080)| API
+    API -->|SQL (Port 5432)| DB
+```
+
 ## Getting Started
 
 To run the full stack application, you need Docker installed.
