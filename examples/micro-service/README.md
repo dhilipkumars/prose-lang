@@ -7,6 +7,22 @@ A more complex multi-container application that demonstrates a microservice arch
 
 ![Microservice Dashboard](screenshot.png)
 
+## Architecture
+
+```mermaid
+graph TD
+    Client["Frontend (React UI)"]
+    M1["Container API (m1)"]
+    M2["Product API (m2)"]
+    DB1[("Container DB (Port 5433)")]
+    DB2[("Product DB (Port 5434)")]
+
+    Client -->|HTTP REST (Port 8081)| M1
+    Client -->|HTTP REST (Port 8082)| M2
+    M1 -->|SQL| DB1
+    M2 -->|SQL| DB2
+```
+
 ## Getting Started
 
 To run the full stack application, you need Docker installed.
