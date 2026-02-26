@@ -10,6 +10,12 @@ This skill empowers the Agent to act as the **Prose Compiler**. You will interpr
 ## Specification
 The specification is usually in the `.prose/specification.md` refer and cache that to remember the format and syntax of the langague. 
 
+## Compiler Rules (CRITICAL)
+1. **The 5 Mandatory Blocks**: Every `.prose` file MUST have five sections: `# Context`, `# Memory`, `# Behaviors`, `# Interface`, and `# Tests`. If one of these sections is missing, **THROW AN ERROR** and stop compilation. You may ask the user if they'd like you to auto-add the missing sections.
+2. **Strict Test Coverage**: During `generate`, `build`, or `test`, check the `# Tests` section. Each behavior in the file MUST have corresponding tests. If absent, you MUST ask the user for explicit permission to bypass the check before proceeding.
+3. **Strict Mode (`@prose_strict_block`)**: If you see `@prose_strict_block` surrounding a block of code or pseudo-code, you MUST exactly match that logic or drop-in replace it. Do not interpret or paraphrase. Generating these blocks during reverse-engineering requires explicit user approval.
+4. **Reverse Engineering**: When running `prose.reverse-engineer`, ALWAYS auto-populate the `# Tests` section with the original test suites to ensure parity.
+5. **Logic Resolution**: If the user's proposed logic is ambiguous, you MUST ask clarifying questions and reformat their logic into one of the supported pseudocode standards (Cambridge, AP CSP, or CLRS) to ensure deterministic compilation.
 
 ## When to use this skill
 - When the user asks to "compile", "build", or "generate code" from a `.prose` file.
@@ -34,6 +40,7 @@ Use this workflow when the user creates/updates a `.prose` file or asks to "sync
     * Map "Memory" items to data structures.
     * Map "Behaviors" to logic functions.
     * Map "Screen/Flow" to UI components or API routes.
+    * **Logic Resolution**: If any behavior or algorithm is ambiguous, STOP. Ask the user clarifying questions and reformat the logic into one of the supported pseudocode standards (Cambridge, AP CSP, or CLRS).
 7.  **Generate Files**: Write the actual source code files to the `./generated/[app-name]` directory.
 8.  **Update Metadata**: Write the new hash to the `./generated/[app-name]/[app-name].prose.md5` metadata file.
 9.  **Verify**: Confirm the files were written successfully.
@@ -42,12 +49,13 @@ Use this workflow when the user creates/updates a `.prose` file or asks to "sync
 Use this workflow to transform the generated code into a deployable artifact using standard system tools.
 
 1.  **Detect Stack**: check the `./generated` folder to determine the build tool needed.
-2.  **Execute Build**:
+2.  **Ambiguity Check**: Before executing the build, ensure all logic in the specification was deterministic. If any logic was ambiguous and bypassed during generation, STOP, ask clarifying questions, and reformat it into a supported pseudocode standard.
+3.  **Execute Build**:
     * **Go**: Run `go build -o ./dist/app ./generated/...`
     * **Node/JS**: Run `npm install` and `npm run build`.
     * **Python**: Create a `requirements.txt` and ensure `pip install -r requirements.txt` passes.
     * **Docker**: If the user requested a container, write a `Dockerfile` relative to the stack and run `docker build -t [app-name] .`
-3.  **Output**: Report the location of the compiled artifact (e.g., "Binary created at ./dist/app").
+4.  **Output**: Report the location of the compiled artifact (e.g., "Binary created at ./dist/app").
 
 ### 3. Testing Logic (`prose.test`)
 Use this workflow to validate that the implementation matches the "Behaviors" defined in the Prose file.
@@ -80,3 +88,11 @@ Use this workflow to release the project.
     * Run `git add .`, `git commit -m "Release v[Version]"`, and `git tag v[Version]`.
     * Run `git push --tags`.
     * (Optional) If Docker, run `docker push [tag]`.
+
+### 6. Reverse Engineering (`prose.reverse-engineer`)
+Use this workflow to analyze an existing codebase and construct an accurate `.prose` specification.
+
+1.  **Analyze Intricate Details**: Read through the existing codebase carefully to capture all intricate details, logic edge cases, algorithm specifics, and exact mathematical operations if applicable. Be exhaustive. Default to standard algorithmic pseudocode. Only use `@prose_strict_block` if explicitly approved by the user, even if it is very difficult to represent the code as pseudo-code.
+2.  **Break Down and Structure**: Do not create a single monolithic `.prose` file for large projects. Break the problem into multiple `.prose` files inside an organized directory structure (e.g., `src/core.prose`, `src/api.prose`).
+3.  **Module Dependencies**: Explicitly document and retain the architectural dependencies between different modules and `.prose` files to ensure they can be compiled together smoothly.
+4.  **Document Tests for Parity (Critical)**: Extract and document the existing test cases, test data, and testing execution commands exactly. The code generated from these `.prose` files MUST be able to be tested with the **exactly same tests** to guarantee true functional parity. Document these testing mechanisms directly in the `.prose` specifications.

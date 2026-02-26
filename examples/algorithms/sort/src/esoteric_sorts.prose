@@ -1,0 +1,170 @@
+# Esoteric Sorting Algorithms
+
+## 1. Context
+Type: Library
+Stack: rust-lang
+
+## 2. Memory
+- `arr`, `piles`: Lists of generic elements. 
+- `length`: An integer representing the total number of elements.
+- `swapped`: A boolean flag used in multiple algorithms to track state.
+
+## 3. Behaviors
+
+### Bogo Sort (`Bogo`)
+**Description**: Permutation sort that shuffles until sorted.
+**Constraints**: `T` must be `constraints.Number`.
+**Procedure `isSorted(arr)`**:
+1. **FOR** `i` **FROM** 0 **TO** `length of arr - 2`:
+   a. **IF** `arr[i] > arr[i+1]`, **RETURN** FALSE.
+2. **RETURN** TRUE.
+
+**Procedure `shuffle(arr)`**:
+1. **FOR EACH** `i` **IN** `arr` indices:
+   a. **SET** `j` to a random integer between 0 and `i` (inclusive).
+   b. **SWAP** `arr[i]` and `arr[j]`.
+
+**Procedure `Bogo(arr)`**:
+1. **WHILE** `isSorted(arr)` is FALSE:
+   a. **CALL** `shuffle(arr)`.
+2. **RETURN** `arr`.
+
+### Cycle Sort (`Cycle`)
+**Description**: In-place unstable sort optimal for minimizing writes.
+**Constraints**: `T` must be `constraints.Number`.
+**Procedure**:
+1. **SET** `len` to `length of arr`.
+2. **IF** `len <= 1`, **RETURN** `arr`.
+3. **FOR** `cycle` **FROM** 0 **TO** `len - 2`:
+   a. **SET** `elem` to `arr[cycle]`.
+   b. **SET** `pos` to `cycle`.
+   c. **FOR** `counter` **FROM** `cycle + 1` **TO** `len - 1`:
+      i. **IF** `arr[counter] < elem`, **INCREMENT** `pos`.
+   d. **IF** `pos == cycle`, **CONTINUE**.
+   e. **WHILE** `elem == arr[pos]`, **INCREMENT** `pos`.
+   f. **SWAP** `arr[pos]` and `elem`.
+   g. **WHILE** `pos != cycle`:
+      i. **SET** `pos` to `cycle`.
+      ii. **FOR** `counter` **FROM** `cycle + 1` **TO** `len - 1`:
+         - **IF** `arr[counter] < elem`, **INCREMENT** `pos`.
+      iii. **WHILE** `elem == arr[pos]`, **INCREMENT** `pos`.
+      iv. **IF** `elem != arr[pos]`, **SWAP** `arr[pos]` and `elem`.
+4. **RETURN** `arr`.
+
+### Pancake Sort (`Pancake`)
+**Description**: Sorts using conceptual 'pancake flip' index reversals.
+**Constraints**: `T` must be `constraints.Ordered`.
+**Procedure `flip(arr, i)`**:
+1. **FOR** `j` **FROM** 0 **TO** `i - 1`:
+   a. **SWAP** `arr[j]` and `arr[i]`.
+   b. **DECREMENT** `i`.
+2. **RETURN** `arr`.
+
+**Procedure `Pancake(arr)`**:
+1. **IF** `length of arr <= 1`, **RETURN** `arr`.
+2. **FOR** `i` **FROM** `length of arr - 1` **DOWN TO** 1:
+   a. **SET** `max` to 0.
+   b. **FOR** `j` **FROM** 1 **TO** `i`:
+      i. **IF** `arr[j] > arr[max]`, **SET** `max` to `j`.
+   c. **IF** `max != i`:
+      i. **SET** `arr` to `flip(arr, max)`.
+      ii. **SET** `arr` to `flip(arr, i)`.
+3. **RETURN** `arr`.
+
+### Patience Sort (`Patience`)
+**Description**: Card-based sort organizing data into piles and merging.
+**Constraints**: `T` must be `constraints.Ordered`.
+**Procedure `mergePiles(piles)`**:
+1. **CREATE** empty list `ret`.
+2. **WHILE** `length of piles > 0`:
+   a. **SET** `minID` to 0, `minValue` to the last item in `piles[0]`.
+   b. **FOR** `i` **FROM** 1 **TO** `length of piles - 1`:
+      i. **IF** `minValue <=` the last item in `piles[i]`, **CONTINUE**.
+      ii. **SET** `minValue` to the last item in `piles[i]`.
+      iii. **SET** `minID` to `i`.
+   c. **APPEND** `minValue` to `ret`.
+   d. **REMOVE** the last item from `piles[minID]`.
+   e. **IF** `piles[minID]` is empty, **REMOVE** `piles[minID]` from `piles`.
+3. **RETURN** `ret`.
+
+**Procedure `Patience(arr)`**:
+1. **IF** `length of arr <= 1`, **RETURN** `arr`.
+2. **CREATE** empty list of lists `piles`.
+3. **FOR EACH** `card` **IN** `arr`:
+   a. **SET** `left` to 0, `right` to `length of piles`.
+   b. **WHILE** `left < right`:
+      i. **SET** `mid` to `left + (right - left) / 2`.
+      ii. **IF** the last item in `piles[mid] >= card`, **SET** `right` to `mid`.
+      iii. **ELSE**, **SET** `left` to `mid + 1`.
+   c. **IF** `left == length of piles`, **APPEND** `[card]` to `piles`.
+   d. **ELSE**, **APPEND** `card` to `piles[left]`.
+4. **RETURN** `mergePiles(piles)`.
+
+### Circle Sort (`Circle`)
+**Description**: Concentric recursion connecting opposite sides of the array.
+**Constraints**: `T` must be `constraints.Ordered`.
+**Procedure `doSort(arr, left, right)`**:
+1. **IF** `left == right`, **RETURN** FALSE.
+2. **SET** `swapped` to FALSE, `low` to `left`, `high` to `right`.
+3. **WHILE** `low < high`:
+   a. **IF** `arr[low] > arr[high]`:
+      i. **SWAP** `arr[low]` and `arr[high]`.
+      ii. **SET** `swapped` to TRUE.
+   b. **INCREMENT** `low`, **DECREMENT** `high`.
+4. **IF** `low == high` **AND** `arr[low] > arr[high+1]`:
+   a. **SWAP** `arr[low]` and `arr[high+1]`.
+   b. **SET** `swapped` to TRUE.
+5. **SET** `mid` to `left + (right - left) / 2`.
+6. **SET** `leftHalf` to `doSort(arr, left, mid)`.
+7. **SET** `rightHalf` to `doSort(arr, mid+1, right)`.
+8. **RETURN** `swapped` OR `leftHalf` OR `rightHalf`.
+
+**Procedure `Circle(arr)`**:
+1. **IF** `length of arr == 0`, **RETURN** `arr`.
+2. **WHILE** `doSort(arr, 0, length of arr - 1)` is TRUE, **CONTINUE**.
+3. **RETURN** `arr`.
+
+### Stooge Sort (`Stooge`)
+**Description**: Highly inefficient recursive subdivision sort.
+**Constraints**: `T` must be `constraints.Ordered`.
+**Procedure `innerStooge(arr, i, j)`**:
+1. **IF** `arr[i] > arr[j]`, **SWAP** `arr[i]` and `arr[j]`.
+2. **IF** `(j - i + 1) > 2`:
+   a. **SET** `t` to `floor((j - i + 1) / 3)`.
+   b. **SET** `arr` to `innerStooge(arr, i, j - t)`.
+   c. **SET** `arr` to `innerStooge(arr, i + t, j)`.
+   d. **SET** `arr` to `innerStooge(arr, i, j - t)`.
+3. **RETURN** `arr`.
+
+**Procedure `Stooge(arr)`**:
+1. **IF** `length of arr == 0`, **RETURN** `arr`.
+2. **RETURN** `innerStooge(arr, 0, length of arr - 1)`.
+
+## 4. Interface
+All behaviors are exposed as Rust generic functions taking a mutable slice `&mut [T]`.
+- `pub fn bogo<T: Ord>(arr: &mut [T])`
+- `pub fn cycle<T: Ord + Clone>(arr: &mut [T])`
+- `pub fn pancake<T: Ord>(arr: &mut [T])`
+- `pub fn patience<T: Ord + Clone>(arr: &mut [T])`
+- `pub fn circle<T: Ord>(arr: &mut [T])`
+- `pub fn stooge<T: Ord>(arr: &mut [T])`
+
+## 5. Tests
+The following table outlines the 8 required test scenarios that must be executed against every single sorting algorithm. Bogo Sort test is traditionally skipped due to resource constraints but included for parity.
+
+| Test Case Name | Input | Expected Output |
+| :--- | :--- | :--- |
+| Sorted Unsigned | `[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]` | `[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]` |
+| Reversed Unsigned | `[10, 9, 8, 7, 6, 5, 4, 3, 2, 1]` | `[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]` |
+| Sorted Signed | `[-10, -9... 0 ... 9, 10]` | `[-10, -9... 0 ... 9, 10]` |
+| Reversed Signed | `[10, 9... 0 ... -9, -10]` | `[-10, -9... 0 ... 9, 10]` |
+| Reversed Signed #2 (Even) | `[10, 9... 1, -1 ... -10]` | `[-10, -9... -1, 1 ... 10]` |
+| Random Order Signed | `[-5, 7, 4, -2, 6, 5, 8, 3, 2, -7, -1, 0, -3, 9, -6, -4, 10, 9, 1, -8, -9, -10]` | `[-10, -9, -8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 9, 10]` |
+| Empty Slice | `[]` | `[]` |
+| Singleton | `[1]` | `[1]` |
+
+### Parity Execution
+Command to verify parity with these specifications:
+```bash
+cargo test
+```

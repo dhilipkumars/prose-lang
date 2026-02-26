@@ -1,0 +1,169 @@
+# Advanced Sorting Algorithms
+
+## 1. Context
+Type: Library
+Stack: rust-lang
+
+## 2. Memory
+- `arr`, `items`, `data`: A list of generic elements of type `T`. It is constrained to ordered types.
+- `length`: An integer representing the total number of elements in the list.
+- `low`, `high`, `mid`, `pivot`: Integers representing array indices.
+- **MaxHeap**: An object containing a slice of elements, `heapSize` (Integer), and an `indices` map mapping element identifiers to their slice index.
+
+## 3. Behaviors
+
+### Quick Sort (`Quicksort`, `QuicksortRange`, `Partition`)
+**Description**: Implements in-place quicksort.
+**Procedure `Partition(arr, low, high)`**:
+1. **SET** `index` to `low - 1`.
+2. **SET** `pivotElement` to `arr[high]`.
+3. **FOR** `i` **FROM** `low` **TO** `high - 1`:
+   a. **IF** `arr[i] <= pivotElement`:
+      i. **INCREMENT** `index`.
+      ii. **SWAP** `arr[index]` and `arr[i]`.
+4. **SWAP** `arr[index + 1]` and `arr[high]`.
+5. **RETURN** `index + 1`.
+
+**Procedure `QuicksortRange(arr, low, high)`**:
+1. **IF** `length of arr <= 1`, **RETURN**.
+2. **IF** `low < high`:
+   a. **SET** `pivot` to `Partition(arr, low, high)`.
+   b. **CALL** `QuicksortRange(arr, low, pivot - 1)`.
+   c. **CALL** `QuicksortRange(arr, pivot + 1, high)`.
+
+**Procedure `Quicksort(arr)`**:
+1. **CALL** `QuicksortRange(arr, 0, length of arr - 1)`.
+2. **RETURN** `arr`.
+
+### Merge Sort (`Merge`, `merge`)
+**Description**: Standard recursive O(n log n) merge sort.
+**Procedure `merge(a, b)`**:
+1. **CREATE** new list `r` of size `length of a + length of b`.
+2. **SET** `i` to 0, `j` to 0.
+3. **WHILE** `i < length of a` **AND** `j < length of b`:
+   a. **IF** `a[i] <= b[j]`:
+      i. **SET** `r[i+j]` to `a[i]`.
+      ii. **INCREMENT** `i`.
+   b. **ELSE**:
+      i. **SET** `r[i+j]` to `b[j]`.
+      ii. **INCREMENT** `j`.
+4. **WHILE** `i < length of a`:
+   a. **SET** `r[i+j]` to `a[i]`.
+   b. **INCREMENT** `i`.
+5. **WHILE** `j < length of b`:
+   a. **SET** `r[i+j]` to `b[j]`.
+   b. **INCREMENT** `j`.
+6. **RETURN** `r`.
+
+**Procedure `Merge(items)`**:
+1. **IF** `length of items < 2`, **RETURN** `items`.
+2. **SET** `middle` to `length of items / 2`.
+3. **SET** `a` to `Merge(items[0 to middle])`.
+4. **SET** `b` to `Merge(items[middle to end])`.
+5. **RETURN** `merge(a, b)`.
+
+### Iterative Merge Sort (`MergeIter`)
+**Description**: Bottom-up merge sort.
+**Procedure**:
+1. **FOR** `step = 1` **WHILE** `step < length of items` **INCREMENT** `step = step * 2`:
+   a. **FOR** `i = 0` **WHILE** `i + step < length of items` **INCREMENT** `i += 2 * step`:
+      i. **SET** `tmp` to `merge(items[i to i+step], items[i+step to min(i+2*step, length)])`.
+      ii. **COPY** `tmp` into `items[i to end of tmp]`.
+2. **RETURN** `items`.
+
+### Parallel Merge Sort (`ParallelMerge`)
+**Description**: Concurrent merge sort using goroutines.
+**Procedure**:
+1. **IF** `length of items < 2`, **RETURN** `items`.
+2. **IF** `length of items < 2048`, **RETURN** `Merge(items)`.
+3. **CREATE** a sync WaitGroup and **ADD** 1.
+4. **SET** `middle` to `length of items / 2`.
+5. **ASYNC** (Goroutine):
+   a. **SET** `a` to `ParallelMerge(items[0 to middle])`.
+   b. **MARK** WaitGroup Done.
+6. **SET** `b` to `ParallelMerge(items[middle to end])`.
+7. **WAIT** for WaitGroup.
+8. **RETURN** `merge(a, b)`.
+
+### Heap Sort (`HeapSort`)
+**Description**: In-place `O(n log n)` representation of heap sort using `heapifyDown`.
+**Procedure `heapifyDown(slice, N, i)`**:
+1. **SET** `l` to `2 * i + 1`, `r` to `2 * i + 2`.
+2. **SET** `max` to `i`.
+3. **IF** `l < N` **AND** `slice[l] > slice[max]`, **SET** `max` to `l`.
+4. **IF** `r < N` **AND** `slice[r] > slice[max]`, **SET** `max` to `r`.
+5. **IF** `max != i`:
+   a. **SWAP** `slice[i]` and `slice[max]`.
+   b. **CALL** `heapifyDown(slice, N, max)`.
+
+**Procedure `HeapSort(slice)`**:
+1. **SET** `N` to `length of slice`.
+2. **FOR** `i` **FROM** `N / 2 - 1` **DOWN TO** 0:
+   a. **CALL** `heapifyDown(slice, N, i)`.
+3. **FOR** `i` **FROM** `N - 1` **DOWN TO** 1:
+   a. **SWAP** `slice[i]` and `slice[0]`.
+   b. **CALL** `heapifyDown(slice, i, 0)`.
+4. **RETURN** `slice`.
+
+### Shell Sort (`Shell`)
+**Description**: An optimization over insertion sort that allows the exchange of items that are far apart.
+**Procedure**:
+1. **FOR** `d` = `length of arr / 2` **WHILE** `d > 0` **DECREMENT** `d = d / 2`:
+   a. **FOR** `i` **FROM** `d` **TO** `length of arr - 1`:
+      i. **FOR** `j` = `i` **WHILE** `j >= d` **AND** `arr[j-d] > arr[j]` **DECREMENT** `j = j - d`:
+         - **SWAP** `arr[j]` and `arr[j-d]`.
+2. **RETURN** `arr`.
+
+### Tim Sort (`Timsort`)
+**Description**: Hybrid sorting algorithm derived from merge sort and insertion sort.
+**Procedure `calculateRunSize(dataLength)`**:
+1. **SET** `remainder` to 0.
+2. **WHILE** `dataLength >= 8`:
+   a. **IF** `dataLength % 2 == 1`, **SET** `remainder` to 1.
+   b. **SET** `dataLength` to `dataLength / 2`.
+3. **RETURN** `dataLength + remainder`.
+
+**Procedure `Timsort(data)`**:
+1. **SET** `runSize` to `calculateRunSize(length of data)`.
+2. **FOR** `lower` = 0 **WHILE** `lower < length of data` **INCREMENT** `lower += runSize`:
+   a. **SET** `upper` to Minimum of `(lower + runSize)` and `length of data`.
+   b. **CALL** `Insertion(data[lower to upper])` *(relies on basic_sorts.prose Insertion)*.
+3. **FOR** `size` = `runSize` **WHILE** `size < length of data` **INCREMENT** `size *= 2`:
+   a. **FOR** `lowerBound` = 0 **WHILE** `lowerBound < length of data` **INCREMENT** `lowerBound += size * 2`:
+      i. **SET** `middleBound` to `lowerBound + size - 1`.
+      ii. **SET** `upperBound` to Minimum of `(lowerBound + 2 * size - 1)` and `(length of data - 1)`.
+      iii. **SET** `left` to `data[lowerBound to middleBound + 1]`.
+      iv. **SET** `right` to `data[middleBound + 1 to upperBound + 1]`.
+      v. **SET** `merged` to `merge(left, right)`.
+      vi. **COPY** `merged` values back into `data` starting at `lowerBound`.
+4. **RETURN** `data`.
+
+## 4. Interface
+All behaviors are exposed as Rust generic functions taking a mutable slice `&mut [T]`.
+- `pub fn quicksort<T: Ord>(arr: &mut [T])`
+- `pub fn merge<T: Ord + Clone>(items: &mut [T])`
+- `pub fn merge_iter<T: Ord + Clone>(items: &mut [T])`
+- `pub fn parallel_merge<T: Ord + Clone + Send>(items: &mut [T])`
+- `pub fn heap_sort<T: Ord>(slice: &mut [T])`
+- `pub fn shell<T: Ord>(arr: &mut [T])`
+- `pub fn timsort<T: Ord + Clone>(data: &mut [T])`
+
+## 5. Tests
+The following table outlines the 8 required test scenarios that must be executed against every single sorting behavior defined above.
+
+| Test Case Name | Input | Expected Output |
+| :--- | :--- | :--- |
+| Sorted Unsigned | `[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]` | `[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]` |
+| Reversed Unsigned | `[10, 9, 8, 7, 6, 5, 4, 3, 2, 1]` | `[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]` |
+| Sorted Signed | `[-10, -9... 0 ... 9, 10]` | `[-10, -9... 0 ... 9, 10]` |
+| Reversed Signed | `[10, 9... 0 ... -9, -10]` | `[-10, -9... 0 ... 9, 10]` |
+| Reversed Signed #2 (Even) | `[10, 9... 1, -1 ... -10]` | `[-10, -9... -1, 1 ... 10]` |
+| Random Order Signed | `[-5, 7, 4, -2, 6, 5, 8, 3, 2, -7, -1, 0, -3, 9, -6, -4, 10, 9, 1, -8, -9, -10]` | `[-10, -9, -8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 9, 10]` |
+| Empty Slice | `[]` | `[]` |
+| Singleton | `[1]` | `[1]` |
+
+### Parity Execution
+Command to verify parity with these specifications:
+```bash
+cargo test
+```
