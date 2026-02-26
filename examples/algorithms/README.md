@@ -1,5 +1,7 @@
 # Algorithms & Data Structures in Prose-Lang
 
+> **Credit & Attribution:** All of the sorting algorithms implemented in this example (both the legacy Go codebase we reverse engineered from, and the mathematically equivalent test suites) were originally sourced from the fantastic, MIT-licensed [TheAlgorithms/Go](https://github.com/TheAlgorithms/Go) repository. This directory serves as a demonstration of abstracting those implementations into language-agnostic Prose-Lang specifications.
+
 This directory contains an extensive technical exercise proving the viability of **Prose-Lang** as a universal, cross-language algorithmic specification language. 
 
 We performed a deep reverse-engineering of complex, real-world sorting algorithms originally written in Go, translated them into plain-English `.prose` specifications (using AP CSP / CLRS standards), and used the Prose-Lang compiler (`prose generate`) to synthetically generate them back into both **Go** and **Rust**.
