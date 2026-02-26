@@ -1,0 +1,129 @@
+# Distribution Sorting Algorithms
+
+## 1. Context
+Type: Library
+Stack: rust-lang
+
+## 2. Memory
+- `arr`, `data`: A list of generic elements of type `T`. For Bucket sort, it is constrained to `constraints.Number`. For Counting, Radix, and Pigeonhole sorts, it is constrained to `constraints.Integer`.
+- `length`: An integer representing the total number of elements in the list.
+- `maxElement`, `minElement`: Maximum and minimum values in the array used to calculate bounds and bucket ranges.
+- `count`, `digits`, `holes`: Integer/Counter arrays used for storing frequencies.
+
+## 3. Behaviors
+
+### Counting Sort (`Count`)
+**Description**: Integer sorting algorithm operating by counting objects with distinct key values.
+**Constraints**: `T` must be `constraints.Integer`.
+**Procedure**:
+1. **IF** `length of data == 0`, **RETURN** `data`.
+2. **SET** `aMin` to `data[0]`, `aMax` to `data[0]`.
+3. **FOR EACH** `x` **IN** `data`:
+   a. **IF** `x < aMin`, **SET** `aMin` to `x`.
+   b. **IF** `x > aMax`, **SET** `aMax` to `x`.
+4. **CREATE** `count` array of size `(aMax - aMin + 1)`, initialized to zeros.
+5. **FOR EACH** `x` **IN** `data`:
+   a. **INCREMENT** `count[x - aMin]`.
+6. **SET** `z` to 0.
+7. **FOR EACH** `(index i, frequency c)` **IN** `count`:
+   a. **WHILE** `c > 0`:
+      i. **SET** `data[z]` to `i + aMin`.
+      ii. **INCREMENT** `z`.
+      iii. **DECREMENT** `c`.
+8. **RETURN** `data`.
+
+### Radix Sort (`RadixSort`, `unsignedRadixSort`, `countSort`)
+**Description**: Non-comparative integer sorting sorting data with integer keys by grouping keys by individual digits.
+**Constraints**: `T` must be `constraints.Integer`.
+**Procedure `countSort(arr, exp)`**:
+1. **CREATE** `digits` array of size 10 (base 10), initialized to zeros.
+2. **CREATE** `output` array of size `length of arr`.
+3. **FOR EACH** `item` **IN** `arr`:
+   a. **INCREMENT** `digits[(item / exp) % 10]`.
+4. **FOR** `i` **FROM** 1 **TO** 9:
+   a. **ADD** `digits[i-1]` to `digits[i]`.
+5. **FOR** `i` **FROM** `length of arr - 1` **DOWN TO** 0:
+   a. **SET** `digitIndex` to `(arr[i] / exp) % 10`.
+   b. **SET** `output[digits[digitIndex] - 1]` to `arr[i]`.
+   c. **DECREMENT** `digits[digitIndex]`.
+6. **RETURN** `output`.
+
+**Procedure `unsignedRadixSort(arr)`**:
+1. **IF** `length of arr == 0`, **RETURN** `arr`.
+2. **SET** `maxElement` to Maximum value in `arr`.
+3. **FOR** `exp = 1` **WHILE** `maxElement / exp > 0` **MULTIPLY** `exp *= 10`:
+   a. **SET** `arr` to `countSort(arr, exp)`.
+4. **RETURN** `arr`.
+
+**Procedure `RadixSort(arr)`**:
+1. **IF** `length of arr < 1`, **RETURN** `arr`.
+2. **CREATE** lists `negatives` and `nonNegatives`.
+3. **FOR EACH** `item` **IN** `arr`:
+   a. **IF** `item < 0`, **APPEND** `-item` to `negatives`.
+   b. **ELSE**, **APPEND** `item` to `nonNegatives`.
+4. **SET** `negatives` to `unsignedRadixSort(negatives)`.
+5. **REVERSE** `negatives` in place, AND **RESTORE** signs (multiply each element by -1).
+6. **SET** `nonNegatives` to `unsignedRadixSort(nonNegatives)`.
+7. **RETURN** CONCATENATION of `negatives` and `nonNegatives`.
+
+### Bucket Sort (`Bucket`)
+**Description**: Sorts by distributing elements into buckets, sorting buckets individually via insertion sort.
+**Constraints**: `T` must be `constraints.Number`.
+**Procedure**:
+1. **IF** `length of arr <= 1`, **RETURN** `arr`.
+2. **SET** `max` to Maximum value in `arr`, `min` to Minimum value in `arr`.
+3. **CREATE** list `bucket` of `length of arr` empty lists.
+4. **FOR EACH** `v` **IN** `arr`:
+   a. **SET** `bucketIndex` to integer value of `((v - min) / (max - min)) * (length of arr - 1)`.
+   b. **APPEND** `v` to `bucket[bucketIndex]`.
+5. **FOR EACH** `list` **IN** `bucket`:
+   a. **SORT** `list` using `Insertion` *(relies on basic_sorts.prose Insertion)*.
+6. **CREATE** empty list `sorted`.
+7. **FOR EACH** `list` **IN** `bucket`:
+   a. **APPEND** all items from `list` to `sorted`.
+8. **RETURN** `sorted`.
+
+### Pigeonhole Sort (`Pigeonhole`)
+**Description**: Sorts array by allocating an array of pigeonholes for each possible value and distributing the original array.
+**Constraints**: `T` must be `constraints.Integer`.
+**Procedure**:
+1. **IF** `length of arr == 0`, **RETURN** `arr`.
+2. **SET** `max` to Maximum value in `arr`, `min` to Minimum value in `arr`.
+3. **SET** `size` to `max - min + 1`.
+4. **CREATE** `holes` array of length `size` initialized to 0.
+5. **FOR EACH** `element` **IN** `arr`:
+   a. **INCREMENT** `holes[element - min]`.
+6. **SET** `i` to 0.
+7. **FOR** `j` **FROM** 0 **TO** `size - 1`:
+   a. **WHILE** `holes[j] > 0`:
+      i. **DECREMENT** `holes[j]`.
+      ii. **SET** `arr[i]` to `j + min`.
+      iii. **INCREMENT** `i`.
+8. **RETURN** `arr`.
+
+## 4. Interface
+All behaviors are exposed as Rust functions taking a mutable slice `&mut [T]` (where T is an appropriate numeric type).
+- `pub fn count(data: &mut [i32])`
+- `pub fn radix_sort(arr: &mut [i32])`
+- `pub fn bucket(arr: &mut [f64])`
+- `pub fn pigeonhole(arr: &mut [i32])`
+
+## 5. Tests
+The following table outlines the 8 required test scenarios that must be executed against every single sorting behavior defined above.
+
+| Test Case Name | Input | Expected Output |
+| :--- | :--- | :--- |
+| Sorted Unsigned | `[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]` | `[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]` |
+| Reversed Unsigned | `[10, 9, 8, 7, 6, 5, 4, 3, 2, 1]` | `[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]` |
+| Sorted Signed | `[-10, -9... 0 ... 9, 10]` | `[-10, -9... 0 ... 9, 10]` |
+| Reversed Signed | `[10, 9... 0 ... -9, -10]` | `[-10, -9... 0 ... 9, 10]` |
+| Reversed Signed #2 (Even) | `[10, 9... 1, -1 ... -10]` | `[-10, -9... -1, 1 ... 10]` |
+| Random Order Signed | `[-5, 7, 4, -2, 6, 5, 8, 3, 2, -7, -1, 0, -3, 9, -6, -4, 10, 9, 1, -8, -9, -10]` | `[-10, -9, -8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 9, 10]` |
+| Empty Slice | `[]` | `[]` |
+| Singleton | `[1]` | `[1]` |
+
+### Parity Execution
+Command to verify parity with these specifications:
+```bash
+cargo test
+```

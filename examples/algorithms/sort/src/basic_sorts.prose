@@ -1,0 +1,158 @@
+# Basic Sorting Algorithms
+
+## 1. Context
+Type: Library
+Stack: rust-lang
+
+## 2. Memory
+- `arr`: A list of generic elements of type `T`. It is constrained to ordered types.
+- `length`: An integer representing the total number of elements in `arr`.
+- `i`, `j`, `min`, `start`, `end`: Temporary integer variables used for indices.
+- `temporary`: Temporary variable of type `T` used for swapping elements.
+- `swapped`: A boolean flag used in multiple algorithms to track state.
+
+## 3. Behaviors
+
+### Insertion Sort (`Insertion`)
+**Description**: Sorts the list by iteratively inserting each element into its correct position within the previously sorted portion.
+**Procedure**:
+1. **FOR** `i` **FROM** 1 **TO** `length` - 1:
+   a. **SET** `temporary` to `arr[i]`.
+   b. **SET** `iterator` to `i`.
+   c. **WHILE** `iterator` > 0 **AND** `arr[iterator-1]` > `temporary`:
+      i. **SET** `arr[iterator]` to `arr[iterator-1]`.
+      ii. **DECREMENT** `iterator` by 1.
+   d. **SET** `arr[iterator]` to `temporary`.
+
+### Selection Sort (`Selection`)
+**Description**: Sorts the list by repeatedly finding the minimum element from the unsorted part and putting it at the beginning.
+**Procedure**:
+1. **FOR** `i` **FROM** 0 **TO** `length` - 1:
+   a. **SET** `min` to `i`.
+   b. **FOR** `j` **FROM** `i + 1` **TO** `length` - 1:
+      i. **IF** `arr[j]` < `arr[min]`:
+         - **SET** `min` to `j`.
+   c. **SWAP** `arr[i]` and `arr[min]`.
+
+### Bubble Sort (`Bubble`)
+**Description**: Sorts the list by repeatedly swapping adjacent elements if they are in the wrong order.
+**Procedure**:
+1. **SET** `swapped` to TRUE.
+2. **WHILE** `swapped` is TRUE:
+   a. **SET** `swapped` to FALSE.
+   b. **FOR** `i` **FROM** 0 **TO** `length` - 2:
+      i. **IF** `arr[i+1]` < `arr[i]`:
+         - **SWAP** `arr[i+1]` and `arr[i]`.
+         - **SET** `swapped` to TRUE.
+
+### Exchange Sort (`Exchange`)
+**Description**: A variant of bubble sort that compares the element at index `i` with all elements after it, swapping when necessary.
+**Procedure**:
+1. **FOR** `i` **FROM** 0 **TO** `length` - 2:
+   a. **FOR** `j` **FROM** `i + 1` **TO** `length` - 1:
+      i. **IF** `arr[i]` > `arr[j]`:
+         - **SWAP** `arr[i]` and `arr[j]`.
+
+### Simple Sort (`Simple`)
+**Description**: Sorts the list by comparing every element with every other element, regardless of iteration direction.
+**Procedure**:
+1. **FOR** `i` **FROM** 0 **TO** `length` - 1:
+   a. **FOR** `j` **FROM** 0 **TO** `length` - 1:
+      i. **IF** `arr[i]` < `arr[j]`:
+         - **SWAP** `arr[i]` and `arr[j]`.
+
+### Improved Simple Sort (`ImprovedSimple`)
+**Description**: An improved variant of simple sort skipping an unnecessary comparison of the first and last elements.
+**Procedure**:
+1. **FOR** `i` **FROM** 1 **TO** `length` - 1:
+   a. **FOR** `j` **FROM** 0 **TO** `length` - 2:
+      i. **IF** `arr[i]` < `arr[j]`:
+         - **SWAP** `arr[i]` and `arr[j]`.
+
+### Cocktail Sort (`Cocktail`)
+**Description**: Standard bidirectional bubble sort (shaker sort).
+**Procedure**:
+1. **IF** `length` == 0, **RETURN** `arr`.
+2. **SET** `swapped` to TRUE.
+3. **SET** `start` to 0.
+4. **SET** `end` to `length` - 1.
+5. **WHILE** `swapped` is TRUE:
+   a. **SET** `swapped` to FALSE.
+   b. **SET** `new_end` to 0.
+   c. **FOR** `i` **FROM** `start` **TO** `end` - 1:
+      i. **IF** `arr[i]` > `arr[i+1]`:
+         - **SWAP** `arr[i]` and `arr[i+1]`.
+         - **SET** `new_end` to `i`.
+         - **SET** `swapped` to TRUE.
+   d. **SET** `end` to `new_end`.
+   e. **IF** `swapped` is FALSE, **BREAK**.
+   f. **SET** `swapped` to FALSE.
+   g. **SET** `new_start` to 0.
+   h. **FOR** `i` **FROM** `end` **DOWN TO** `start` + 1:
+      i. **IF** `arr[i]` < `arr[i-1]`:
+         - **SWAP** `arr[i]` and `arr[i-1]`.
+         - **SET** `new_start` to `i`.
+         - **SET** `swapped` to TRUE.
+   i. **SET** `start` to `new_start`.
+
+### Comb Sort (`Comb`)
+**Description**: An improvement over bubble sort using a shrinking gap sequence.
+**Procedure**:
+1. **SET** `gap` to `length`.
+2. **SET** `swapped` to TRUE.
+3. **WHILE** `gap` != 1 **OR** `swapped` is TRUE:
+   a. **SET** `gap` to `(gap * 10) / 13`.
+   b. **IF** `gap` < 1, **SET** `gap` to 1.
+   c. **SET** `swapped` to FALSE.
+   d. **FOR** `i` **FROM** 0 **TO** `length` - `gap` - 1:
+      i. **IF** `arr[i]` > `arr[i+gap]`:
+         - **SWAP** `arr[i]` and `arr[i+gap]`.
+         - **SET** `swapped` to TRUE.
+
+### Odd-Even Sort (`OddEvenSort`)
+**Description**: Sorts array alternating alternating odd/even indexed adjacent comparisons.
+**Procedure**:
+1. **IF** `length` == 0, **RETURN** `arr`.
+2. **SET** `swapped` to TRUE.
+3. **WHILE** `swapped` is TRUE:
+   a. **SET** `swapped` to FALSE.
+   b. **FOR** `i` **FROM** 1 **TO** `length` - 2 **BY** 2 (Odd pass):
+      i. **IF** `arr[i]` > `arr[i+1]`:
+         - **SWAP** `arr[i]` and `arr[i+1]`.
+         - **SET** `swapped` to TRUE.
+   c. **FOR** `i` **FROM** 0 **TO** `length` - 2 **BY** 2 (Even pass):
+      i. **IF** `arr[i]` > `arr[i+1]`:
+         - **SWAP** `arr[i]` and `arr[i+1]`.
+         - **SET** `swapped` to TRUE.
+
+## 4. Interface
+All behaviors are exposed as Rust generic functions taking a mutable slice `&mut [T]`.
+- `pub fn insertion<T: Ord>(arr: &mut [T])`
+- `pub fn selection<T: Ord>(arr: &mut [T])`
+- `pub fn bubble<T: Ord>(arr: &mut [T])`
+- `pub fn exchange<T: Ord>(arr: &mut [T])`
+- `pub fn simple<T: Ord>(arr: &mut [T])`
+- `pub fn improved_simple<T: Ord>(arr: &mut [T])`
+- `pub fn cocktail<T: Ord>(arr: &mut [T])`
+- `pub fn comb<T: Ord>(arr: &mut [T])`
+- `pub fn odd_even_sort<T: Ord>(arr: &mut [T])`
+
+## 5. Tests
+The following table outlines the 8 required test scenarios that must be executed against every single sorting behavior defined above.
+
+| Test Case Name | Input | Expected Output |
+| :--- | :--- | :--- |
+| Sorted Unsigned | `[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]` | `[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]` |
+| Reversed Unsigned | `[10, 9, 8, 7, 6, 5, 4, 3, 2, 1]` | `[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]` |
+| Sorted Signed | `[-10, -9... 0 ... 9, 10]` | `[-10, -9... 0 ... 9, 10]` |
+| Reversed Signed | `[10, 9... 0 ... -9, -10]` | `[-10, -9... 0 ... 9, 10]` |
+| Reversed Signed #2 (Even) | `[10, 9... 1, -1 ... -10]` | `[-10, -9... -1, 1 ... 10]` |
+| Random Order Signed | `[-5, 7, 4, -2, 6, 5, 8, 3, 2, -7, -1, 0, -3, 9, -6, -4, 10, 9, 1, -8, -9, -10]` | `[-10, -9, -8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 9, 10]` |
+| Empty Slice | `[]` | `[]` |
+| Singleton | `[1]` | `[1]` |
+
+### Parity Execution
+Command to verify parity with these specifications:
+```bash
+cargo test
+```

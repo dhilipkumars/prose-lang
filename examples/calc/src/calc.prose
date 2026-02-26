@@ -60,9 +60,27 @@ Target System: Web Browser
 - **Color Theme: Light Grey and Black
 - **Keypad**:
   - Digits (0-9): Triggers `calc.inputDigit`. 
-    - The Digit should be in devnagiri script
+    - The Digit should be in mandarin script
   - Dot (.): Triggers `calc.inputDot`.
   - Clear (AC): Triggers `calc.clear`.
   - Operators (+, -, *, /): Triggers `calc.performOperation`.
   - Equals (=): Triggers `calc.performOperation` with NULL next operator.
+     - The Equals button should be in green color, when pressed changes to dark green
 
+## 5. Tests
+
+### Test: `calc.inputDigit`
+- **Scenario**: User inputs multiple digits sequentially (e.g., '1', '2', '3').
+- **Assert**: `DisplayValue` concatenates correctly (e.g., "123").
+
+### Test: `calc.inputDot`
+- **Scenario**: User inputs a dot after a digit, and tries multiple dots (e.g., '1', '.', '5', '.').
+- **Assert**: `DisplayValue` accepts only one decimal point (e.g., "1.5").
+
+### Test: `calc.clear`
+- **Scenario**: User performs an operation then clicks clear ('AC').
+- **Assert**: `DisplayValue` is reset to "0", `PreviousValue` to NULL, `Operator` to NULL.
+
+### Test: `calc.performOperation`
+- **Scenario**: User performs addition ('2', '+', '3', '=').
+- **Assert**: `DisplayValue` updates to "5" upon pressing '='.
