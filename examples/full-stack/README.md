@@ -15,8 +15,8 @@ graph TD
     API["Backend API (Rust Actix-Web)"]
     DB[("Database (PostgreSQL)")]
 
-    Client -->|HTTP REST (Port 8080)| API
-    API -->|SQL (Port 5432)| DB
+    Client -- "HTTP REST (Port 8080)" --> API
+    API -- "SQL (Port 5432)" --> DB
 ```
 
 ## Getting Started
