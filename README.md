@@ -53,7 +53,7 @@ The recommended way to install `prose-lang` is via the pre-built release on GitH
 
 ```bash
 # Install the latest release directly via URL
-uv tool install https://github.com/dhilipkumars/prose-lang/releases/download/v0.0.1-alpha/prose_install-0.0.1a0-py3-none-any.whl
+uv tool install https://github.com/dhilipkumars/prose-lang/releases/download/v0.1.0-alpha/prose_install-0.0.1a0-py3-none-any.whl
 ```
 
 Alternatively, to build from source:
