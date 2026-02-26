@@ -1,5 +1,9 @@
 # prose-lang
 
+> [!WARNING]
+> **Experimental Project**
+> `prose-lang` is currently an experimental research project exploring AI-driven compilation. **It should NOT be used in production environments.**
+
 A declarative language for describing applications in natural prose that AI agents compile to source code.
 
 ![Prose-Lang CLI Demo](hello-world-demo.gif)
@@ -12,7 +16,7 @@ You do not run a traditional binary to build your app. Instead, you interact wit
 
 1. **Write Specs:** You author `.prose` files detailing memory, layout, and behaviors, and save them in a `src/` directory.
 2. **Invoke the Skill:** You command your AI agent to `prose.generate src/`.
-3. **The AI Compiles:** Guided by the strict instructions in the installed `SKILL.md` file, the AI reads your prose specifications and deterministically maps them into real source code inside a `generated/` directory.
+3. **The AI Compiles:** Guided by the strict instructions in the installed `SKILL.md` file, the AI reads your prose specifications and maps them into real source code inside a `generated/` directory.
 
 ## Example
 
@@ -33,7 +37,7 @@ NONE
 
 ## Top 5 Benefits of Using Prose-Lang Today
 
-In the era of AI-assisted engineering and "vibe coding," `prose-lang` acts as the architectural anchor that keeps your projects scalable, maintainable, and deterministic.
+In the era of AI-assisted engineering and "vibe coding," `prose-lang` acts as the architectural anchor that keeps your projects scalable and maintainable.
 
 1. **Architecture First, Zero Spaghetti:** Vibe coding often leads to tangled state and inconsistent abstractions as the AI organically patches code. Prose-lang enforces a strict top-down architecture (Memory, Behaviors, Interface) *before* generation, ensuring clean domain models and clear boundaries.
 2. **Infinite Context Memory:** LLMs have finite context windows and start hallucinating as codebases grow beyond a few thousand lines. A `.prose` file acts as heavily compressed memory. You can hand a `.prose` file to an AI months later, and it will instantly understand your exact business rules without needing to read 100 source files.
