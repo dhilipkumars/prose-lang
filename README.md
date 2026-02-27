@@ -1,10 +1,8 @@
 # prose-lang
 
-> [!WARNING]
-> **Experimental Project**
-> `prose-lang` is currently an experimental research project exploring AI-driven compilation. **It should NOT be used in production environments.**
-
 A declarative language for describing applications in natural prose that AI agents compile to source code.
+
+![Prose-Lang](prose-lang.jpg)
 
 ![Prose-Lang CLI Demo](hello-world-demo.gif)
 
@@ -119,3 +117,7 @@ uv tool install . --force --reinstall
   # Future flow
   specify init my-project --ai gemini --ai-skills
   ```
+
+---
+
+*Note: `prose-lang` is currently an experimental research project exploring AI-driven compilation. For now avoid in production environments.*
