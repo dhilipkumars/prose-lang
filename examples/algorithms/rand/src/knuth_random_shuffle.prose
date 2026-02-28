@@ -1,0 +1,77 @@
+# Context
+Type: Algorithm
+Stack: generate code for Go , Rust and Python
+
+# Memory
+NONE
+
+# Behaviors
+
+## PRNG: Simple LCG (Cross-Language Parity)
+All implementations MUST use the same Linear Congruential Generator (LCG) 
+to ensure identical random number sequences across Go, Rust, and Python.
+
+@prose_strict_block
+```
+LCG Parameters (glibc constants):
+    a = 1103515245
+    c = 12345
+    m = 2^31  (i.e., 2147483648)
+
+State: a single uint64 `lcg_state`
+
+Function lcg_seed(seed):
+    lcg_state = seed mod m
+
+Function lcg_next() -> uint64:
+    lcg_state = (a * lcg_state + c) mod m
+    RETURN lcg_state
+
+Function lcg_intn(upper_bound) -> int:
+    RETURN lcg_next() mod upper_bound
+```
+@end_prose_strict_block
+
+## Procedure
+
+Procedure `KnuthRandomShuffle(arr)`:
+*IF* envvar RAND_SEED is set *THEN*
+    *CALL* `lcg_seed(value(RAND_SEED))`
+*ELSE*
+    *CALL* `lcg_seed(current unix timestamp in seconds)`
+*END IF*
+1. **SET** `n` to `length of arr`.
+2. **FOR** `i` **FROM** `n - 1` **DOWN TO** 1:
+   a. **SET** `j` to `lcg_intn(i + 1)`.
+   b. **SWAP** `arr[i]` and `arr[j]`.
+3. **RETURN** `arr`.
+
+# Interface
+- command line takes a list of integers and returns a shuffled list of integers
+- ENV variable to set RAND_SEED for testing.
+
+# Tests
+Write a shell script and place it in ./tests director, 
+same tests should be run for all the generated code.
+
+- set RAND_SEED to 100 
+    - run input 1,2,3,4,5,6,7,8,9,10 
+    - shuffile 3 times, all output should match for all the target langs
+
+- set RAND_SEED to 2001 
+    - run input 100 element array with random numbers
+    - shuffile 10 times, all output should match for all the target langs
+
+- benchmark (only when explicitly asked by user)
+    RAND_SEED is not set
+    for each lang 
+    - input 100000 element array with random numbers
+    - run 1000 times
+    - print avg time and std dev
+    - print avg memory usage and std dev
+    done
+
+
+  
+
+
