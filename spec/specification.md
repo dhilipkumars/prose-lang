@@ -86,6 +86,8 @@ Behaviors must be specific enough to ensure deterministic code generation. Where
 
 **Ambiguous Logic is Invalid:** Vague requirements (such as "create basic CRUD operations" or "add standard authentication") without explicitly defined data models or steps are considered invalid Prose. AI compiler agents are instructed to **HALT compilation and prompt the user for clarification** rather than attempting to guess or infer the missing logic.
 
+**Assumption Disclosure:** If the compiler agent needs to make any implementation decision not explicitly stated in the `.prose` file (e.g., choosing a specific random number generator for cross-language determinism, selecting a hashing algorithm, or picking a serialization format), it MUST pause and disclose the assumption to the user. The user should then update the `.prose` specification to explicitly capture the decision, ensuring the `.prose` file remains the single source of truth and any future compilation produces consistent results.
+
 You can use standard logical constructs or explicitly adopt one of the [Supported Pseudocode Standards](#supported-pseudocode-standards) to guarantee precise interpretation.
 
 ### Example

@@ -16,6 +16,7 @@ The specification is usually in the `.prose/specification.md` refer and cache th
 3. **Strict Mode (`@prose_strict_block`)**: If you see `@prose_strict_block` surrounding a block of code or pseudo-code, you MUST exactly match that logic or drop-in replace it. Do not interpret or paraphrase. Generating these blocks during reverse-engineering requires explicit user approval.
 4. **Reverse Engineering**: When running `prose.reverse-engineer`, ALWAYS auto-populate the `# Tests` section with the original test suites to ensure parity.
 5. **Logic Resolution & Ambiguity**: **DO NOT GUESS OR INFER LOGIC.** If the user's proposed logic is overly vague, ambiguous, or lacks sufficient detail (e.g., "create a REST interface for basic CRUD operations"), you MUST **PAUSE, ask clarifying questions, and wait for the user's response** before generating any code. Once clarified, reformat the logic into one of the supported pseudocode standards (Cambridge, AP CSP, or CLRS) to ensure deterministic compilation.
+6. **Assumption Disclosure (CRITICAL)**: If you need to make **any** design decision or implementation choice that is NOT explicitly stated in the `.prose` file (e.g., choosing a specific PRNG algorithm for cross-language parity, selecting a hashing strategy, picking a data serialization format), you MUST **PAUSE** and disclose the assumption to the user. Present the assumption clearly, explain why it is needed, and ask the user to **update the `.prose` specification** with the decision before you proceed to generate code. The `.prose` file must always be the single source of truth — not the compiler agent's judgment.
 
 ## When to use this skill
 - When the user asks to "compile", "build", or "generate code" from a `.prose` file.
@@ -41,6 +42,7 @@ Use this workflow when the user creates/updates a `.prose` file or asks to "sync
     * Map "Behaviors" to logic functions.
     * Map "Screen/Flow" to UI components or API routes.
     * **Logic Resolution & Ambiguity**: If any behavior, algorithm, or requirement is ambiguous or lacks necessary detail, **STOP**. Do NOT proceed to generate code. Ask the user clarifying questions and wait for their response. Once clarified, reformat the logic into one of the supported pseudocode standards (Cambridge, AP CSP, or CLRS).
+    * **Assumption Disclosure**: Before writing any code, review all implementation decisions you are about to make. If ANY decision is not explicitly documented in the `.prose` file (e.g., choice of random number generator, serialization format, concurrency model), **STOP**. Disclose the assumption to the user and ask them to update the `.prose` spec before proceeding.
 7.  **Generate Files**: Write the actual source code files to the `./generated/[app-name]` directory.
 8.  **Update Metadata**: Write the new hash to the `./generated/[app-name]/[app-name].prose.md5` metadata file.
 9.  **Verify**: Confirm the files were written successfully.
