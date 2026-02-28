@@ -82,7 +82,11 @@ The `Behaviors` block declares the precise business logic, algorithms, and rules
 *   **Error Handling**: How the system reacts to failures.
 
 ### Rules
-Behaviors must be specific enough to ensure deterministic code generation. Where algorithms require exact mathematical precision, the prose must dictate the exact approach rather than a vague summary. Behaviors should be testable. You can use standard logical constructs or explicitly adopt one of the [Supported Pseudocode Standards](#supported-pseudocode-standards) to guarantee precise interpretation.
+Behaviors must be specific enough to ensure deterministic code generation. Where algorithms require exact mathematical precision, the prose must dictate the exact approach rather than a vague summary. Behaviors should be testable.
+
+**Ambiguous Logic is Invalid:** Vague requirements (such as "create basic CRUD operations" or "add standard authentication") without explicitly defined data models or steps are considered invalid Prose. AI compiler agents are instructed to **HALT compilation and prompt the user for clarification** rather than attempting to guess or infer the missing logic.
+
+You can use standard logical constructs or explicitly adopt one of the [Supported Pseudocode Standards](#supported-pseudocode-standards) to guarantee precise interpretation.
 
 ### Example
 ```prose
