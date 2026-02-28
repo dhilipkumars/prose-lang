@@ -4,17 +4,23 @@ A declarative language for describing applications in natural prose that AI agen
 
 ![Prose-Lang](prose-lang.jpg)
 
+## A quick demo of prose-lang
 ![Prose-Lang CLI Demo](hello-world-demo.gif)
 
 ## How It Works (The Agent Skill Model)
 
+![Prose-Lang Workflow](prose-workflow.png)
+
 Unlike traditional programming languages that use syntax-tree compilers, **`prose-lang` uses an LLM Agent as its compiler.**
 
-You do not run a traditional binary to build your app. Instead, you interact with your AI IDE (like GitHub Copilot, Cursor, or Gemini) equipped with the Prose-Lang Agent Skill:
+You do not run a traditional binary to build your app. Instead, you interact with your AI IDE (like GitHub Copilot, Cursor, or Gemini) equipped with the Prose-Lang Agent Skill to execute the complete software development lifecycle:
 
-1. **Write Specs:** You author `.prose` files detailing memory, layout, and behaviors, and save them in a `src/` directory.
-2. **Invoke the Skill:** You command your AI agent to `prose.generate src/`.
-3. **The AI Compiles:** Guided by the strict instructions in the installed `SKILL.md` file, the AI reads your prose specifications and maps them into real source code inside a `generated/` directory.
+1. **Write Specs (`write .prose`):** You author `.prose` files detailing memory, layout, and behaviors.
+2. **Generate Code (`prose generate`):** The AI Agent reads your `.prose` specs and compiles them into real, syntax-correct source code.
+3. **Build the App (`prose build`):** The generated code is built into a runnable application.
+4. **Test & Validate (`prose test`):** Tests are run to ensure validation of the implementation against your original specs.
+5. **Document (`prose documentation`):** User-friendly documentation is automatically generated.
+6. **Package & Publish (`prose publish`):** The finalized application is packaged and prepared for distribution.
 
 ## Example
 
