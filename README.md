@@ -4,8 +4,6 @@ A declarative language for describing applications in natural prose that AI agen
 
 ![Prose-Lang](prose-lang.jpg)
 
-## A quick demo of prose-lang
-![Prose-Lang CLI Demo](hello-world-demo.gif)
 
 ## How It Works (The Agent Skill Model)
 
@@ -38,6 +36,9 @@ NONE
 # Interface
 NONE
 ```
+
+## A quick demo of prose-lang
+![Prose-Lang CLI Demo](hello-world-demo.gif)
 
 ## Top 5 Benefits of Using Prose-Lang Today
 
