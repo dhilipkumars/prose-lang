@@ -1,0 +1,82 @@
+[1;33m═══ Building all implementations ═══[0m
+  Building Go...
+  [0;32mGo built.[0m
+  Building Rust...
+warning: function `mod_pow` is never used
+  --> src/main.rs:64:4
+   |
+64 | fn mod_pow(mut base: u64, mut exp: u64,...
+   |    ^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+  [0;32mRust built.[0m
+  Building Java...
+  [0;32mJava built.[0m
+
+[1;33m═══ Benchmark: Top 100 primes below 1000000 (reverse order) ═══[0m
+
+[0;36m─── [1mGo[0m[0;36m: Top 100 primes below 1000000 (reverse) ───[0m
+  [0;32mFound 10/100 primes (tested 69 numbers, 15s elapsed)[0m
+  [0;32mFound 20/100 primes (tested 165 numbers, 31s elapsed)[0m
+  [0;32mFound 30/100 primes (tested 230 numbers, 47s elapsed)[0m
+  [0;32mFound 40/100 primes (tested 312 numbers, 63s elapsed)[0m
+  [0;32mFound 50/100 primes (tested 390 numbers, 83s elapsed)[0m
+  [0;32mFound 60/100 primes (tested 467 numbers, 103s elapsed)[0m
+  [0;32mFound 70/100 primes (tested 525 numbers, 122s elapsed)[0m
+  [0;32mFound 80/100 primes (tested 581 numbers, 142s elapsed)[0m
+  [0;32mFound 90/100 primes (tested 656 numbers, 162s elapsed)[0m
+  [0;32mFound 100/100 primes (tested 725 numbers, 180s elapsed)[0m
+
+  [1mResults (Go):[0m
+  Total time:        180s
+  Numbers tested:    725
+  Avg time/number:   .248s
+  Top 10 primes:     999983 999979 999961 999959 999953 999931 999917 999907 999883 999863
+  Bottom 10 primes:  998687 998681 998653 998651 998633 998629 998623 998617 998561 998551
+
+[0;36m─── [1mRust[0m[0;36m: Top 100 primes below 1000000 (reverse) ───[0m
+  [0;32mFound 10/100 primes (tested 69 numbers, 16s elapsed)[0m
+  [0;32mFound 20/100 primes (tested 165 numbers, 32s elapsed)[0m
+  [0;32mFound 30/100 primes (tested 230 numbers, 48s elapsed)[0m
+  [0;32mFound 40/100 primes (tested 312 numbers, 64s elapsed)[0m
+  [0;32mFound 50/100 primes (tested 390 numbers, 83s elapsed)[0m
+  [0;32mFound 60/100 primes (tested 467 numbers, 103s elapsed)[0m
+  [0;32mFound 70/100 primes (tested 525 numbers, 122s elapsed)[0m
+  [0;32mFound 80/100 primes (tested 581 numbers, 142s elapsed)[0m
+  [0;32mFound 90/100 primes (tested 656 numbers, 162s elapsed)[0m
+  [0;32mFound 100/100 primes (tested 725 numbers, 179s elapsed)[0m
+
+  [1mResults (Rust):[0m
+  Total time:        179s
+  Numbers tested:    725
+  Avg time/number:   .246s
+  Top 10 primes:     999983 999979 999961 999959 999953 999931 999917 999907 999883 999863
+  Bottom 10 primes:  998687 998681 998653 998651 998633 998629 998623 998617 998561 998551
+
+[0;36m─── [1mJava[0m[0;36m: Top 100 primes below 1000000 (reverse) ───[0m
+  [0;32mFound 10/100 primes (tested 69 numbers, 28s elapsed)[0m
+  [0;32mFound 20/100 primes (tested 165 numbers, 57s elapsed)[0m
+  [0;32mFound 30/100 primes (tested 230 numbers, 84s elapsed)[0m
+  [0;32mFound 40/100 primes (tested 312 numbers, 113s elapsed)[0m
+  [0;32mFound 50/100 primes (tested 390 numbers, 2675s elapsed)[0m
+  [0;32mFound 60/100 primes (tested 467 numbers, 3673s elapsed)[0m
+  [0;32mFound 70/100 primes (tested 525 numbers, 3836s elapsed)[0m
+  [0;32mFound 80/100 primes (tested 581 numbers, 3884s elapsed)[0m
+  [0;32mFound 90/100 primes (tested 656 numbers, 4896s elapsed)[0m
+  [0;32mFound 100/100 primes (tested 725 numbers, 4927s elapsed)[0m
+
+  [1mResults (Java):[0m
+  Total time:        4927s
+  Numbers tested:    725
+  Avg time/number:   6.795s
+  Top 10 primes:     999983 999979 999961 999959 999953 999931 999917 999907 999883 999863
+  Bottom 10 primes:  998687 998681 998653 998651 998633 998629 998623 998617 998561 998551
+
+[1;33m═══ Benchmark Summary ═══[0m
+  [1mLang        Total Time     Nums Tested       Avg/Num     Top Prime   100th Prime[0m
+  Go                180s             725         .248s        999983        998551
+  Rust              179s             725         .246s        999983        998551
+  Java             4927s             725        6.795s        999983        998551
+
+[0;32mBenchmark complete.[0m

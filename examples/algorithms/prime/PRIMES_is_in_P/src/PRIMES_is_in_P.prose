@@ -1,0 +1,34 @@
+# Context
+Type: Algorithm
+Stack: generate code for Go, Rust and Java
+Refernce: AKS Primality Test (https://en.wikipedia.org/wiki/AKS_primality_test)
+
+# Memory
+NONE    
+
+# Behaviors
+
+@prose_strict_block
+```
+Check if n is a perfect power: if n = a^b for integers a > 1 and b > 1, then output composite.
+Find the smallest r such that ord_r(n) > (log₂ n)². If 1 < gcd(r, n) < n for any r checked, then output composite.
+For all 2 ≤ a ≤ min(r, n−1), check that a does not divide n: If a|n for some 2 ≤ a ≤ min(r, n−1), then output composite.
+If n ≤ r, then output prime.
+For a = 1 to ⌊√(φ(r)) · log₂(n)⌋ do
+  if (X+a)^n ≠ X^n+a (mod X^r − 1, n), then output composite;
+Output prime.
+```
+@end_prose_strict_block
+
+# Interface
+command line takes a number and returns true if it is prime and false otherwise
+
+# Tests
+Tests should be in ./tests directory as a shell script
+same test should be run for all the target code
+- print first 100 prime numbers
+- print first 100 composite numbers
+
+# Benchmark (only when explicitly asked by user)
+- Calculate top 100 prime for 1000000 (in reverse order)
+
