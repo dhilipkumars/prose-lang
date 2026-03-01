@@ -82,7 +82,7 @@ RAND_SEED=42 python3 generated/knuth_random_shuffle/python/knuth_random_shuffle.
 
 ## Testing
 
-The test script builds all three implementations and verifies cross-language output parity.
+The test script builds all three implementations and verifies cross-language output parity with **chained iterations** — each shuffle's output feeds as input to the next.
 
 ```bash
 bash tests/test_shuffle.sh
@@ -90,21 +90,21 @@ bash tests/test_shuffle.sh
 
 ### What it tests
 
-| Test | Seed | Input | Runs | Assertion |
-|------|------|-------|------|-----------|
-| **Test 1** | `RAND_SEED=100` | `1,2,3,4,5,6,7,8,9,10` | 3 | Go = Rust = Python for each run |
-| **Test 2** | `RAND_SEED=2001` | `1..100` (100 elements) | 10 | Go = Rust = Python for each run |
+| Test | Seed | Input | Chained Runs | Assertion |
+|------|------|-------|--------------|-----------|
+| **Test 1** | `RAND_SEED=100` | `1,2,3,4,5,6,7,8,9,10` | 3 | Go = Rust = Python, output → next input |
+| **Test 2** | `RAND_SEED=2001` | `1..100` (100 elements) | 10 | Go = Rust = Python, output → next input |
 
 ### Test Results
 
 ```
-═══ Test 1: RAND_SEED=100, input=1..10, 3 shuffles ═══
-  ✓ PASS: Run 1 — all match: 5,3,7,10,9,2,6,4,1,8
-  ✓ PASS: Run 2 — all match: 5,3,7,10,9,2,6,4,1,8
-  ✓ PASS: Run 3 — all match: 5,3,7,10,9,2,6,4,1,8
+═══ Test 1: RAND_SEED=100, input=1..10, 3 chained shuffles ═══
+  ✓ Run 1: all match: 5,3,7,10,9,2,6,4,1,8     (input: 1,2,3,4,5,6,7,8,9,10)
+  ✓ Run 2: all match: 9,7,6,8,1,3,2,10,5,4     (input: 5,3,7,10,9,2,6,4,1,8)
+  ✓ Run 3: all match: 1,6,2,4,5,7,3,8,9,10     (input: 9,7,6,8,1,3,2,10,5,4)
 
-═══ Test 2: RAND_SEED=2001, 100 elements, 10 shuffles ═══
-  ✓ PASS: Run 1–10 — all 3 languages match
+═══ Test 2: RAND_SEED=2001, 100 elements, 10 chained shuffles ═══
+  ✓ Run 1–10: all 3 languages match
 
   Passed: 13 | Failed: 0
   All tests passed!
@@ -112,7 +112,7 @@ bash tests/test_shuffle.sh
 
 ## Benchmarking
 
-The benchmark script measures wall-clock time and peak memory across 1,000 iterations on a 100,000-element array.
+The benchmark script measures wall-clock time and peak memory across **1,000 chained iterations** on a 100,000-element array (each iteration's output feeds as input to the next).
 
 ```bash
 bash tests/benchmark_shuffle.sh
@@ -123,7 +123,7 @@ bash tests/benchmark_shuffle.sh
 | Parameter | Value |
 |-----------|-------|
 | Array size | 100,000 integers |
-| Iterations | 1,000 per language |
+| Iterations | 1,000 per language (chained) |
 | RAND_SEED | Not set (uses current time) |
 | Timing | `/usr/bin/time -l` (wall-clock + max RSS) |
 

@@ -57,16 +57,19 @@ same tests should be run for all the generated code.
 - set RAND_SEED to 100 
     - run input 1,2,3,4,5,6,7,8,9,10 
     - shuffile 3 times, all output should match for all the target langs
+    - NEXT_INPUT = Shuffle(INPUT) for each iteration
 
 - set RAND_SEED to 2001 
     - run input 100 element array with random numbers
     - shuffile 10 times, all output should match for all the target langs
+    - NEXT_INPUT = Shuffle(INPUT) for each iteration
 
 - benchmark (only when explicitly asked by user)
     RAND_SEED is not set
     for each lang 
     - input 100000 element array with random numbers
     - run 1000 times
+      - NEXT_INPUT = Shuffle(INPUT) for each iteration
     - print avg time and std dev
     - print avg memory usage and std dev
     done

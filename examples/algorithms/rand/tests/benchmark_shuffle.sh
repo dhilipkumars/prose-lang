@@ -6,6 +6,7 @@
 #   - RAND_SEED is NOT set (use current time)
 #   - Input: 100,000 element array with random numbers
 #   - Run: 1,000 times per language
+#   - NEXT_INPUT = Shuffle(INPUT) for each iteration
 #   - Report: avg time, std dev, avg memory usage, std dev
 #
 set -euo pipefail
@@ -47,7 +48,6 @@ PY_SCRIPT="$GEN_DIR/python/knuth_random_shuffle.py"
 echo ""
 echo -e "${YELLOW}═══ Generating ${ARRAY_SIZE}-element input array ═══${NC}"
 
-# Generate a deterministic large array using awk (faster than seq+shuf for 100K)
 INPUT=$(awk -v n="$ARRAY_SIZE" 'BEGIN{for(i=1;i<=n;i++){if(i>1)printf ",";printf "%d",int(rand()*1000000)};}')
 echo -e "  ${GREEN}Input generated (${#INPUT} chars).${NC}"
 
@@ -62,10 +62,11 @@ run_benchmark() {
     local ITERS="$3"
 
     echo ""
-    echo -e "${CYAN}─── Benchmarking ${BOLD}${LANG_NAME}${NC}${CYAN} (${ITERS} iterations) ───${NC}"
+    echo -e "${CYAN}─── Benchmarking ${BOLD}${LANG_NAME}${NC}${CYAN} (${ITERS} iterations, chained) ───${NC}"
 
     local TIMES=()
     local MEMS=()
+    local CURRENT_INPUT="$INPUT"
 
     for i in $(seq 1 "$ITERS"); do
         if (( i % 100 == 0 )); then
@@ -73,9 +74,12 @@ run_benchmark() {
         fi
 
         # Use /usr/bin/time to capture wall time and max RSS
-        # macOS /usr/bin/time -l gives max RSS in bytes
         local TIME_OUTPUT
-        TIME_OUTPUT=$( { /usr/bin/time -l $CMD "$INPUT" > /dev/null; } 2>&1 )
+        local CMD_OUTPUT
+        CMD_OUTPUT=$( { TIME_OUTPUT=$( { /usr/bin/time -l $CMD "$CURRENT_INPUT"; } 2>&1 1>&3 ); } 3>&1 )
+
+        # Chain: NEXT_INPUT = Shuffle(INPUT)
+        CURRENT_INPUT="$CMD_OUTPUT"
 
         # Extract real time (seconds) — macOS format: "N.NN real"
         local REAL_TIME
@@ -135,8 +139,9 @@ run_benchmark() {
 # ─── Run Benchmarks ─────────────────────────────────────────────────────────
 
 echo ""
-echo -e "${YELLOW}═══ Benchmark: ${ARRAY_SIZE} elements × ${ITERATIONS} iterations ═══${NC}"
+echo -e "${YELLOW}═══ Benchmark: ${ARRAY_SIZE} elements × ${ITERATIONS} iterations (chained) ═══${NC}"
 echo -e "  ${CYAN}RAND_SEED is NOT set (per spec)${NC}"
+echo -e "  ${CYAN}Each iteration feeds output as next input${NC}"
 
 run_benchmark "Go"     "$GO_BIN"                      "$ITERATIONS"
 run_benchmark "Rust"   "$RUST_BIN"                     "$ITERATIONS"

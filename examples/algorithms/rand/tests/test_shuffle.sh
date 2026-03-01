@@ -2,8 +2,8 @@
 #
 # Test script for Knuth Random Shuffle — Cross-Language Parity
 #
-# Builds and tests Go, Rust, and Python implementations to verify
-# they produce identical shuffled output for the same RAND_SEED.
+# Each iteration chains its output as input to the next:
+#   NEXT_INPUT = Shuffle(INPUT)
 #
 set -euo pipefail
 
@@ -40,41 +40,53 @@ GO_BIN="$GEN_DIR/go/knuth_shuffle"
 RUST_BIN="$GEN_DIR/rust/target/release/knuth_random_shuffle"
 PY_BIN="python3 $GEN_DIR/python/knuth_random_shuffle.py"
 
-# ─── Test 1: RAND_SEED=100, input 1..10, shuffle 3 times ────────────────────
+# ─── Test 1: RAND_SEED=100, input 1..10, shuffle 3 times (chained) ──────────
 
 echo ""
-echo -e "${YELLOW}═══ Test 1: RAND_SEED=100, input=1..10, 3 shuffles ═══${NC}"
-INPUT="1,2,3,4,5,6,7,8,9,10"
+echo -e "${YELLOW}═══ Test 1: RAND_SEED=100, input=1..10, 3 chained shuffles ═══${NC}"
+
 export RAND_SEED=100
 
+go_input="1,2,3,4,5,6,7,8,9,10"
+rust_input="1,2,3,4,5,6,7,8,9,10"
+py_input="1,2,3,4,5,6,7,8,9,10"
+
 for run in 1 2 3; do
-    go_out=$(   "$GO_BIN"  "$INPUT")
-    rust_out=$( "$RUST_BIN" "$INPUT")
-    py_out=$(   $PY_BIN    "$INPUT")
+    go_out=$(   "$GO_BIN"  "$go_input")
+    rust_out=$( "$RUST_BIN" "$rust_input")
+    py_out=$(   $PY_BIN    "$py_input")
 
     if [[ "$go_out" == "$rust_out" && "$rust_out" == "$py_out" ]]; then
-        pass "Run $run — all match: $go_out"
+        pass "Run $run — all match: $go_out (input was: $go_input)"
     else
         fail "Run $run — mismatch!"
         echo "       Go:     $go_out"
         echo "       Rust:   $rust_out"
         echo "       Python: $py_out"
     fi
+
+    # Chain: NEXT_INPUT = Shuffle(INPUT)
+    go_input="$go_out"
+    rust_input="$rust_out"
+    py_input="$py_out"
 done
 
-# ─── Test 2: RAND_SEED=2001, 100-element random array, 10 shuffles ──────────
+# ─── Test 2: RAND_SEED=2001, 100-element array, 10 chained shuffles ─────────
 
 echo ""
-echo -e "${YELLOW}═══ Test 2: RAND_SEED=2001, 100 elements, 10 shuffles ═══${NC}"
+echo -e "${YELLOW}═══ Test 2: RAND_SEED=2001, 100 elements, 10 chained shuffles ═══${NC}"
 
-# Generate a deterministic 100-element array (1..100, no trailing comma)
-INPUT=$(seq 1 100 | paste -sd, -)
 export RAND_SEED=2001
 
+# Generate a deterministic 100-element array (1..100, no trailing comma)
+go_input=$(seq 1 100 | paste -sd, -)
+rust_input="$go_input"
+py_input="$go_input"
+
 for run in $(seq 1 10); do
-    go_out=$(   "$GO_BIN"  "$INPUT")
-    rust_out=$( "$RUST_BIN" "$INPUT")
-    py_out=$(   $PY_BIN    "$INPUT")
+    go_out=$(   "$GO_BIN"  "$go_input")
+    rust_out=$( "$RUST_BIN" "$rust_input")
+    py_out=$(   $PY_BIN    "$py_input")
 
     if [[ "$go_out" == "$rust_out" && "$rust_out" == "$py_out" ]]; then
         pass "Run $run — all 3 languages match"
@@ -84,6 +96,11 @@ for run in $(seq 1 10); do
         echo "       Rust:   ${rust_out:0:80}..."
         echo "       Python: ${py_out:0:80}..."
     fi
+
+    # Chain: NEXT_INPUT = Shuffle(INPUT)
+    go_input="$go_out"
+    rust_input="$rust_out"
+    py_input="$py_out"
 done
 
 # ─── Summary ─────────────────────────────────────────────────────────────────
