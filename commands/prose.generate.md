@@ -16,11 +16,13 @@ Use this command when the user creates or updates a `.prose` file and wants to s
    ```
 
    * `source_file` — the `.prose` file to compile.
-   * `metadata_file` — `./generated/[app-name]/[app-name].prose.md5`
+   * `metadata_file` — `./generated/[app-name]/prose.lock`
+   * `prose.lock` stores the source hash and a requirements hash derived from the `# Context` block so stack or dependency changes are detected.
 
 2. **Decision**
    - If `needsGeneration` is `false` → **STOP**. Inform the user the code is up to date.
-   - If `needsGeneration` is `true` → proceed.
+   - If `needsGeneration` is `true` and `requirementsChanged` is `true` → **STOP AND ASK FOR CONFIRMATION** before regenerating because `prose.lock` will be updated.
+   - If `needsGeneration` is `true` and `requirementsChanged` is `false` → proceed.
 
 3. **Read Source** — Execute `read_file` on the `.prose` file. Do **not** rely on conversation history.
 
@@ -33,6 +35,8 @@ Use this command when the user creates or updates a `.prose` file and wants to s
 
 6. **Generate Files** — Write source files to `./generated/[app-name]/`.
 
-7. **Update Metadata** — Write the new hash to `./generated/[app-name]/[app-name].prose.md5`.
+7. **Update Metadata** — Write both:
+   * `./generated/[app-name]/[app-name].prose.md5` for backward-compatible source hash checks.
+   * `./generated/[app-name]/prose.lock` as JSON containing `version`, `sourceHash`, and `requirementsHash`.
 
 8. **Verify** — Confirm the files were written successfully.

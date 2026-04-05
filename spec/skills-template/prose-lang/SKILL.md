@@ -31,10 +31,12 @@ Use this workflow when the user creates/updates a `.prose` file or asks to "sync
 
 1.  **Sync Check (TOKEN OPTIMIZATION)**: **ALWAYS** execute the bundled script `.prose/scripts/check_sync.py` **BEFORE** reading the source file.
     * Run: `python3 .prose/scripts/check_sync.py [source_file] [metadata_file]`
-    * Metadata file location: `./generated/[app-name]/[app-name].prose.md5`
+    * Metadata file location: `./generated/[app-name]/prose.lock`
+    * `prose.lock` stores the exact source hash plus a requirements hash derived from the `# Context` block so stack or dependency changes are detected deterministically.
 2.  **Decision**: 
     - If `needsGeneration` is `false`: **STOP HERE**. Skip `read_file`. Inform the user that the code is up to date.
-    - If `needsGeneration` is `true`: Proceed to the next step.
+    - If `needsGeneration` is `true` and `requirementsChanged` is `true`: **PAUSE** and ask the user for confirmation before proceeding because the generation environment recorded in `prose.lock` will change.
+    - If `needsGeneration` is `true` and `requirementsChanged` is `false`: Proceed to the next step.
 3.  **Read Source (MANDATORY)**: Execute `read_file` on the target `.prose` file ONLY if the sync check confirms it is out of date. DO NOT rely on your conversation history.
 4.  **Analyze Stack**: Identify the target technology stack (e.g., Go, Python, React).
 6.  **Compile (Mental Step)**:
@@ -44,7 +46,9 @@ Use this workflow when the user creates/updates a `.prose` file or asks to "sync
     * **Logic Resolution & Ambiguity**: If any behavior, algorithm, or requirement is ambiguous or lacks necessary detail, **STOP**. Do NOT proceed to generate code. Ask the user clarifying questions and wait for their response. Once clarified, reformat the logic into one of the supported pseudocode standards (Cambridge, AP CSP, or CLRS).
     * **Assumption Disclosure**: Before writing any code, review all implementation decisions you are about to make. If ANY decision is not explicitly documented in the `.prose` file (e.g., choice of random number generator, serialization format, concurrency model), **STOP**. Disclose the assumption to the user and ask them to update the `.prose` spec before proceeding.
 7.  **Generate Files**: Write the actual source code files to the `./generated/[app-name]` directory.
-8.  **Update Metadata**: Write the new hash to the `./generated/[app-name]/[app-name].prose.md5` metadata file.
+8.  **Update Metadata**: Write both metadata files after a successful generation:
+    * `./generated/[app-name]/[app-name].prose.md5` containing the source hash for backward compatibility.
+    * `./generated/[app-name]/prose.lock` containing JSON with `version`, `sourceHash`, and `requirementsHash`.
 9.  **Verify**: Confirm the files were written successfully.
 
 ### 2. Building Artifacts (`prose.build`)
