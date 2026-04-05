@@ -17,7 +17,7 @@ import re
 import sys
 from pathlib import Path
 
-MANDATORY_BLOCKS = ("Context", "Memory", "Behaviors", "Interface", "Tests")
+PROSE_SECTION_HEADINGS = ("Context", "Memory", "Behaviors", "Interface", "Tests")
 BLOCK_PATTERN = re.compile(r"^#{1,2}\s+([A-Za-z][A-Za-z ]*)\s*$")
 
 
@@ -39,7 +39,7 @@ def extract_block(content: str, block_name: str) -> str:
                 block_lines = [line.rstrip()]
                 continue
 
-            if capture and heading in MANDATORY_BLOCKS:
+            if capture and heading in PROSE_SECTION_HEADINGS:
                 break
 
         if capture:
@@ -66,6 +66,11 @@ def resolve_metadata_paths(source_file: Path, metadata_file: Path) -> tuple[Path
         legacy_hash_file = metadata_file.with_name(f"{source_file.name}.md5")
     else:
         lock_file = metadata_file.with_name("prose.lock")
+        expected_legacy_name = f"{source_file.name}.md5"
+        if metadata_file.name != expected_legacy_name:
+            raise ValueError(
+                f"Legacy metadata file must be named {expected_legacy_name}: {metadata_file}"
+            )
         legacy_hash_file = metadata_file
     return lock_file, legacy_hash_file
 
