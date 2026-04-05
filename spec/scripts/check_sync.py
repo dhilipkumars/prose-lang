@@ -17,15 +17,17 @@ import re
 import sys
 from pathlib import Path
 
-PROSE_SECTION_HEADINGS = ("Context", "Memory", "Behaviors", "Interface", "Tests")
+PROSE_SECTIONS = ("Context", "Memory", "Behaviors", "Interface", "Tests")
 BLOCK_PATTERN = re.compile(r"^#{1,2}\s+([A-Za-z][A-Za-z ]*)\s*$")
 
 
 def calculate_source_hash(source_file: Path) -> str:
+    """Return the MD5 hash of the full .prose source file."""
     return hashlib.md5(source_file.read_bytes()).hexdigest()
 
 
 def extract_block(content: str, block_name: str) -> str:
+    """Return a named top-level Prose block, including its heading line."""
     lines = content.splitlines()
     capture = False
     block_lines = []
@@ -39,7 +41,7 @@ def extract_block(content: str, block_name: str) -> str:
                 block_lines = [line.rstrip()]
                 continue
 
-            if capture and heading in PROSE_SECTION_HEADINGS:
+            if capture and heading in PROSE_SECTIONS:
                 break
 
         if capture:
@@ -49,11 +51,13 @@ def extract_block(content: str, block_name: str) -> str:
 
 
 def calculate_requirements_hash(source_file: Path) -> str:
+    """Return a SHA256 hash of the `# Context` block used for lockfile checks."""
     context_block = extract_block(source_file.read_text(), "Context")
     return hashlib.sha256(context_block.encode("utf-8")).hexdigest()
 
 
 def read_lock_file(lock_file: Path) -> dict:
+    """Read a prose.lock JSON object containing `sourceHash` and `requirementsHash`."""
     data = json.loads(lock_file.read_text())
     if not isinstance(data, dict):
         raise ValueError(f"Invalid prose.lock format: {lock_file}")
@@ -61,6 +65,7 @@ def read_lock_file(lock_file: Path) -> dict:
 
 
 def resolve_metadata_paths(source_file: Path, metadata_file: Path) -> tuple[Path, Path]:
+    """Return the expected prose.lock path and legacy `.prose.md5` path."""
     if metadata_file.name == "prose.lock":
         lock_file = metadata_file
         legacy_hash_file = metadata_file.with_name(f"{source_file.name}.md5")
@@ -76,6 +81,7 @@ def resolve_metadata_paths(source_file: Path, metadata_file: Path) -> tuple[Path
 
 
 def read_stored_metadata(source_file: Path, metadata_file: Path) -> tuple[Path, str | None, str | None]:
+    """Return `(lock_file, stored_hash, stored_requirements_hash)` from available metadata."""
     lock_file, legacy_hash_file = resolve_metadata_paths(source_file, metadata_file)
 
     stored_hash = None
