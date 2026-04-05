@@ -65,7 +65,7 @@ def read_lock_file(lock_file: Path) -> dict:
 
 
 def resolve_metadata_paths(source_file: Path, metadata_file: Path) -> tuple[Path, Path]:
-    """Return the expected prose.lock path and legacy `.prose.md5` path."""
+    """Return `(lock_file_path, legacy_hash_file_path)` for the given metadata input."""
     if metadata_file.name == "prose.lock":
         lock_file = metadata_file
         legacy_hash_file = metadata_file.with_name(f"{source_file.name}.md5")
@@ -81,7 +81,7 @@ def resolve_metadata_paths(source_file: Path, metadata_file: Path) -> tuple[Path
 
 
 def read_stored_metadata(source_file: Path, metadata_file: Path) -> tuple[Path, str | None, str | None]:
-    """Return `(lock_file, stored_hash, stored_requirements_hash)` from available metadata."""
+    """Return `(lock_file_path, stored_hash, stored_requirements_hash)` from available metadata."""
     lock_file, legacy_hash_file = resolve_metadata_paths(source_file, metadata_file)
 
     stored_hash = None
